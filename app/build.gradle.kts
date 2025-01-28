@@ -1,11 +1,15 @@
+import com.google.protobuf.gradle.id
+import com.google.protobuf.gradle.proto
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.google.protobuf)
 }
 
 android {
     namespace = "com.vlad.grpcdemo"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.vlad.grpcdemo"
@@ -47,7 +51,70 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    sourceSets {
+        getByName("main") {
+            java {
+                srcDirs("build/generated/source/proto/main/java")
+            }
+            kotlin {
+                srcDirs("build/generated/source/proto/main/kotlin")
+            }
+            proto {
+                srcDir("src/main/proto")
+            }
+        }
+    }
 }
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:4.29.3"
+    }
+    plugins {
+        id("grpc") {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.70.0"
+        }
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                // Configure the built-in plugins
+                id("java") {
+                    option("lite")
+                }
+            }
+            task.plugins {
+                id("grpc") {
+                    option("lite")
+                }
+            }
+        }
+    }
+}
+
+//protobuf {
+//    protoc {
+//        // Specify the Protocol Buffer compiler version
+//        artifact = "com.google.protobuf:protoc:4.29.0" // Use the latest version
+//    }
+//    plugins {
+//        // Optional: If you want to use a specific plugin for generating code
+//        // Example for gRPC
+//        id("grpc") {
+//            artifact = "io.grpc:protoc-gen-grpc-java:1.70.0" // Use the latest version
+//        }
+//    }
+//    generateProtoTasks {
+//        all().forEach { task ->
+//            task.builtins {
+//                // Configure the built-in plugins
+//                id("java") {}
+//                // If you're using gRPC
+//                id("grpc") {}
+//            }
+//        }
+//    }
+//}
 
 dependencies {
 
@@ -63,6 +130,8 @@ dependencies {
     implementation(libs.io.grpc.protobuf)
     implementation(libs.io.grpc.stub)
     implementation(libs.javax.annotation)
+//    implementation(libs.google.protobuf.java)
+//    implementation(libs.google.protobuf.kotlin)
 //    implementation(libs)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

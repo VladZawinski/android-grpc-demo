@@ -11,6 +11,7 @@ composeBom = "2023.08.00"
 javaXAnnotation = "1.3.2"
 grpcAndroid = "1.52.1"
 protobufPlugin = "0.9.4"
+googleProtobuf = "4.29.3"
 
 
 [libraries]
@@ -31,6 +32,8 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 io-grpc-okttp = { group = "io.grpc", name = "grpc-okhttp", version.ref = "grpcAndroid" }
 io-grpc-protobuf = { group = "io.grpc", name = "grpc-protobuf-lite", version.ref = "grpcAndroid" }
 io-grpc-stub = { group = "io.grpc", name = "grpc-stub", version.ref = "grpcAndroid" }
+google-protobuf-java = {group = "com.google.protobuf", name = "protobuf-java-util", version.ref = "googleProtobuf"}
+google-protobuf-kotlin = {group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "googleProtobuf"}
 javax-annotation = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javaXAnnotation"}
 
 [plugins]
