@@ -44,4 +44,7 @@ class ChatViewModel(
             }
         })
     }
+    fun sendMessage(content: String) = viewModelScope.launch {
+        chatService.sendMessage(userContract.userId, userContract.userName, content)
+    }
 }
