@@ -12,39 +12,58 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.vlad.grpcdemo.chat.ChatScreen
+import com.vlad.grpcdemo.landing.LandingScreen
+import com.vlad.grpcdemo.stock.StockScreen
 import com.vlad.grpcdemo.ui.theme.AndroidgrpcdemoTheme
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
-    val viewModel by viewModels<TestViewModel>()
+    private val grpcClient by inject<GrpcClient>()
+    override fun onStart() {
+        grpcClient.init()
+        super.onStart()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        viewModel
         setContent {
             AndroidgrpcdemoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                Scaffold(modifier = Modifier.fillMaxSize()) { _ ->
+                    AppNavigation()
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AndroidgrpcdemoTheme {
-        Greeting("Android")
+    override fun onDestroy() {
+        grpcClient.shutdown()
+        super.onDestroy()
     }
+}
+
+@Composable
+fun AppNavigation() {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = Screen.Landing.route) {
+        composable(Screen.Landing.route) {
+            LandingScreen(navController)
+        }
+        composable(Screen.Chat.route) {
+            ChatScreen(navController)
+        }
+        composable(Screen.Stock.route) {
+            StockScreen(navController)
+        }
+    }
+}
+
+sealed class Screen(val route: String) {
+    data object Landing : Screen("landing")
+    data object Chat : Screen("chat")
+    data object Stock : Screen("stock")
 }

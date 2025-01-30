@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.protobuf)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -55,6 +56,7 @@ android {
         getByName("main") {
             java {
                 srcDirs("build/generated/source/proto/main/java")
+                srcDirs("build/generated/source/proto/main/grpc")
             }
             kotlin {
                 srcDirs("build/generated/source/proto/main/kotlin")
@@ -129,7 +131,14 @@ dependencies {
     implementation(libs.io.grpc.okttp)
     implementation(libs.io.grpc.protobuf)
     implementation(libs.io.grpc.stub)
-    implementation(libs.javax.annotation)
+    implementation("org.apache.tomcat:annotations-api:6.0.53")
+    compileOnly(libs.javax.annotation)
+    implementation(project.dependencies.platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation("androidx.navigation:navigation-compose:2.8.6")
+    implementation("io.insert-koin:koin-androidx-compose:2.8.6")
+    implementation("com.jakewharton.timber:timber:5.0.1")
 //    implementation(libs.google.protobuf.java)
 //    implementation(libs.google.protobuf.kotlin)
 //    implementation(libs)
