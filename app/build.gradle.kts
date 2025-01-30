@@ -94,30 +94,6 @@ protobuf {
     }
 }
 
-//protobuf {
-//    protoc {
-//        // Specify the Protocol Buffer compiler version
-//        artifact = "com.google.protobuf:protoc:4.29.0" // Use the latest version
-//    }
-//    plugins {
-//        // Optional: If you want to use a specific plugin for generating code
-//        // Example for gRPC
-//        id("grpc") {
-//            artifact = "io.grpc:protoc-gen-grpc-java:1.70.0" // Use the latest version
-//        }
-//    }
-//    generateProtoTasks {
-//        all().forEach { task ->
-//            task.builtins {
-//                // Configure the built-in plugins
-//                id("java") {}
-//                // If you're using gRPC
-//                id("grpc") {}
-//            }
-//        }
-//    }
-//}
-
 dependencies {
 
     implementation(libs.androidx.core.ktx)

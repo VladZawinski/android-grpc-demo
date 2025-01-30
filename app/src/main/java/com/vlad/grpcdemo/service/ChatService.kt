@@ -7,6 +7,7 @@ import chat.ChatServiceGrpc.ChatServiceStub
 import com.vlad.grpcdemo.GrpcClient
 import io.grpc.stub.StreamObserver
 import kotlinx.coroutines.suspendCancellableCoroutine
+import stock.StockServiceGrpc
 import kotlin.coroutines.resumeWithException
 
 interface ChatService {

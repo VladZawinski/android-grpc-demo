@@ -28,5 +28,5 @@ class LandingViewModel(
 
 sealed class LandingViewModelEvent {
     data object Idle: LandingViewModelEvent()
-    object GoToChatScreen : LandingViewModelEvent()
+    data object GoToChatScreen : LandingViewModelEvent()
 }
