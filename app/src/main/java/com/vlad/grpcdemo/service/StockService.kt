@@ -1,20 +1,18 @@
 package com.vlad.grpcdemo.service
 
-import chat.ChatServiceGrpc
 import com.vlad.grpcdemo.GrpcClient
-import io.grpc.stub.StreamObserver
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import stock.Stock.StockList
-import stock.StockServiceGrpc
+import stock.StockServiceGrpcKt
 
 interface StockService {
-
+    val stockFlow: Flow<StockList>
 }
 
 class StockServiceImpl(
-    private val grpcClient: GrpcClient
+    grpcClient: GrpcClient
 ): StockService {
-    private val stockStub = StockServiceGrpc.newStub(grpcClient.channel)
-    fun streamStock(observer: StreamObserver<StockList>) {
-        stockStub.getStockUpdates(observer)
-    }
+    private val stockStub = StockServiceGrpcKt.StockServiceCoroutineStub(grpcClient.channel)
+    override val stockFlow: Flow<StockList> = stockStub.getStockUpdates(flowOf())
 }

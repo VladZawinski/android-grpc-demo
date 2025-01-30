@@ -70,23 +70,34 @@ android {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:4.29.3"
+        artifact = libs.protoc.asProvider().get().toString()
     }
     plugins {
-        id("grpc") {
-            artifact = "io.grpc:protoc-gen-grpc-java:1.70.0"
+        create("java") {
+            artifact = libs.protoc.gen.grpc.java.get().toString()
+        }
+        create("grpc") {
+            artifact = libs.protoc.gen.grpc.java.get().toString()
+        }
+        create("grpckt") {
+            artifact = libs.protoc.gen.grpc.kotlin.get().toString() + ":jdk8@jar"
         }
     }
     generateProtoTasks {
-        all().forEach { task ->
-            task.builtins {
-                // Configure the built-in plugins
-                id("java") {
+        all().forEach {
+            it.plugins {
+                create("java") {
+                    option("lite")
+                }
+                create("grpc") {
+                    option("lite")
+                }
+                create("grpckt") {
                     option("lite")
                 }
             }
-            task.plugins {
-                id("grpc") {
+            it.builtins {
+                create("kotlin") {
                     option("lite")
                 }
             }
@@ -105,10 +116,11 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.io.grpc.okttp)
+    implementation(libs.io.grpc.protobuf.kotlin)
+    implementation(libs.protobuf.kotlin.lite)
     implementation(libs.io.grpc.protobuf)
-    implementation(libs.io.grpc.stub)
-    implementation("org.apache.tomcat:annotations-api:6.0.53")
-    compileOnly(libs.javax.annotation)
+//    implementation(libs.io.grpc.stub)
+    implementation(libs.grpc.kotlin.stub)
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.koin.android)

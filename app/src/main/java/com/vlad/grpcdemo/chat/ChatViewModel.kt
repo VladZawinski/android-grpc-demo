@@ -9,6 +9,7 @@ import com.vlad.grpcdemo.service.ChatService
 import io.grpc.stub.StreamObserver
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
@@ -20,29 +21,18 @@ class ChatViewModel(
     init {
         observeMessages()
     }
-    private fun observeMessages() {
-        chatService.onMessageUpdated(object: StreamObserver<MessageList> {
-            override fun onNext(value: MessageList?) {
-                viewModelScope.launch {
-                    val messages = value?.messagesList?.map {
-                        MessageModel(
-                            id = it.userId,
-                            username = it.username,
-                            body = it.content,
-                            isSender = it.userId == userContract.userId
-                        )
-                    }
-                    _messageFlow.emit(messages.orEmpty())
-                }
+    private fun observeMessages() = viewModelScope.launch {
+        chatService.messagesFlow.collectLatest {
+            val messages = it.messagesList?.map { message ->
+                MessageModel(
+                    id = message.userId,
+                    username = message.username,
+                    body = message.content,
+                    isSender = message.userId == userContract.userId
+                )
             }
-
-            override fun onError(t: Throwable?) {
-
-            }
-
-            override fun onCompleted() {
-            }
-        })
+            _messageFlow.emit(messages.orEmpty())
+        }
     }
     fun sendMessage(content: String) = viewModelScope.launch {
         chatService.sendMessage(userContract.userId, userContract.userName, content)

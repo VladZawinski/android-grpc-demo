@@ -7,6 +7,8 @@ import com.vlad.grpcdemo.contract.UserContractImpl
 import com.vlad.grpcdemo.landing.LandingViewModel
 import com.vlad.grpcdemo.service.ChatService
 import com.vlad.grpcdemo.service.ChatServiceImpl
+import com.vlad.grpcdemo.service.StockService
+import com.vlad.grpcdemo.service.StockServiceImpl
 import com.vlad.grpcdemo.stock.StockViewModel
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
@@ -18,6 +20,7 @@ val singletonModule = module {
 }
 
 val bindModule = module {
+    singleOf(::StockServiceImpl) bind StockService::class
     singleOf(::ChatServiceImpl) bind ChatService::class
     singleOf(::UserContractImpl) bind UserContract::class
 }
@@ -25,5 +28,5 @@ val bindModule = module {
 val viewModelModule = module {
     viewModel { ChatViewModel(get(), get()) }
     viewModel { LandingViewModel(get(), get()) }
-    viewModel { StockViewModel() }
+    viewModel { StockViewModel(get()) }
 }

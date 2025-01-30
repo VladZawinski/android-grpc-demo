@@ -80,6 +80,14 @@ fun LandingScreen(
             ) {
                 Text(text = "Next")
             }
+            Button(
+                onClick = {
+                    navController.navigate(Screen.Stock.route)
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "Go To Stock")
+            }
         }
     }
 }
